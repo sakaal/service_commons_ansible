@@ -1,0 +1,30 @@
+---
+# file: roles/updates_auto/tasks/main.yml
+
+- name: Install yum-cron
+  with_items:
+  - yum-cron
+  sudo: yes
+  yum: name={{ item }}
+
+- name: Configure yum-cron
+  with_items:
+  - key: "update_cmd"
+    val: "minimal-security"
+  - key: "download_updates"
+    val: "yes"
+  - key: "apply_updates"
+    val: "yes"
+  - key: "random_sleep"
+    val: "240" # minutes
+  sudo: yes
+  lineinfile:
+    dest=/etc/yum/yum-cron.conf
+    regexp='^{{ item.key | mandatory }}\s'
+    line='{{ item.key | mandatory }} = {{ item.val | mandatory }}'
+  notify:
+    - Restart yum-cron
+
+- name: Enable yum-cron
+  sudo: yes
+  service: name=yum-cron enabled=yes state=started
