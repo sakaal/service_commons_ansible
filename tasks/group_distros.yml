@@ -6,6 +6,8 @@
 - name: Group all hosts by OS distribution and version
   group_by: key="dist_{{ ansible_distribution }}-{{ ansible_distribution_version
                  | regex_replace('^([0-9]+).*$', '\\1') }}"
+  changed_when: False
+
 - name: Report OS distribution and version
   debug: msg="dist_{{ ansible_distribution }}-{{ ansible_distribution_version
               | regex_replace('^([0-9]+).*$', '\\1') }}"
