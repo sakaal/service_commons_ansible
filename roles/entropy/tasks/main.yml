@@ -1,0 +1,12 @@
+---
+# file: roles/entropy/tasks/main.yml
+
+- name: HArdware Volatile Entropy Gathering and Expansion
+  with_items:
+  - haveged 
+  sudo: yes
+  yum: name={{ item }}
+
+- name: Enable the entropy service
+  sudo: yes
+  service: name=haveged enabled=yes state=started
