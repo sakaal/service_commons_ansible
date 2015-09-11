@@ -2,6 +2,6 @@
 # file: roles/java_keystore/defaults/main.yml
 
 java_keystores:
-- keystore: "{{ java_oracle_home }}/jre/lib/security/jssecacerts"
-- keystore: "{{ java_oracle_home }}/jre/lib/security/cacerts"
+- keystore: "{{ java_oracle_home|mandatory }}/jre/lib/security/jssecacerts"
+- keystore: "{{ java_oracle_home|mandatory }}/jre/lib/security/cacerts"
 - keystore: cacerts
