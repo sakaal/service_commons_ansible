@@ -1,11 +1,10 @@
----
 # file: roles/gpg_keys/tasks/main.yml
-
 #
 # Deploys administrative GPG public keys
 #
 # You must have the keys in your local GnuPG keyring before applying this role.
 #
+---
 
 - name: Validate the given administrative GPG public key ids and timestamps
   with_items: trusted_gpg_public_keys

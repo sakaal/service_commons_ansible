@@ -1,10 +1,10 @@
----
 # file: roles/updates_auto/tasks/main.yml
+---
 
 - name: Install yum-cron
   with_items:
   - yum-cron
-  sudo: yes
+  become: yes
   yum: name={{ item }}
 
 - name: Configure yum-cron
@@ -17,7 +17,7 @@
     val: "yes"
   - key: "random_sleep"
     val: "240" # minutes
-  sudo: yes
+  become: yes
   lineinfile:
     dest=/etc/yum/yum-cron.conf
     regexp='^{{ item.key | mandatory }}\s'
@@ -26,5 +26,5 @@
     - Restart yum-cron
 
 - name: Enable yum-cron
-  sudo: yes
+  become: yes
   service: name=yum-cron enabled=yes state=started

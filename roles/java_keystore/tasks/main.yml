@@ -1,6 +1,4 @@
----
 # file: roles/java_keystore/tasks/main.yml
-
 #
 # Import certificates to Java truststore files.
 #
@@ -13,6 +11,7 @@
 #
 # Note that /etc/pki/java/cacerts is managed by roles/ca_trust.
 #
+---
 
 - name: Check if Oracle JDK is present
   when: java_oracle_home is defined
@@ -32,7 +31,7 @@
   with_nested:
   - java_keystores|default([])
   - java_certificates
-  sudo: yes
+  become: yes
   shell: >
          chdir="/etc/pki/java" "{{ java_home_bin }}keytool"
          -keystore "{{ item.0.keystore | mandatory }}"
@@ -46,7 +45,7 @@
 - name: Import certificates to Java keystores
   with_items: java_keystore.results|default([])
   when: item|changed
-  sudo: yes
+  become: yes
   shell: >
          chdir="/etc/pki/java" "{{ java_home_bin }}keytool"
          -keystore "{{ item.item.0.keystore }}"

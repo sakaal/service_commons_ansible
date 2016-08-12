@@ -1,6 +1,6 @@
----
 # file: roles/updates_auto/handlers/main.yml
+---
 
 - name: Restart yum-cron
-  sudo: yes
+  become: yes
   service: name=yum-cron state=restarted

@@ -1,9 +1,8 @@
----
 # file: roles/ssh_known_hosts/tasks/main.yml
-
 #
 # SSH known hosts management
 #
+---
 
 - name: Ensure that the SSH known hosts file exists
   file: dest="/home/{{ admin_username }}/.ssh/known_hosts" state=touch mode=600
@@ -20,7 +19,7 @@
 
 - name: Add known hosts
   when: ssh_known_hosts is defined
-  with_items: ssh_known_hosts|default([])
+  with_items: "{{ ssh_known_hosts|default([]) }}"
   lineinfile: dest="/home/{{ admin_username }}/.ssh/known_hosts"
               line="{{ item.hosts|join(',') | mandatory
               }} {{ item.key | mandatory }}"
