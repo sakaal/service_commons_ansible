@@ -1,9 +1,9 @@
----
 # file: roles/dynect_session/handlers/main.yml
+---
 
-- name: End DynECT API session
-  local_action: >
-                command curl -s -X DELETE -H 'Content-Type: application/json'
-                -H 'Auth-Token: {{ dynect_session_token }}'
-                {{ dynect_api_url }}/Session/
+- name: End DynECT session
+  local_action: uri method=DELETE
+                url="{{ dynect_api_url | mandatory }}/Session/"
+                HEADER_Content-Type="application/json"
+                HEADER_Auth-Token="{{ dynect_session_token | mandatory }}"
   changed_when: False
