@@ -4,23 +4,29 @@
 #
 ---
 
-- name: Establish DynECT API session
+#
+# The JSON body must be wrapped in whitespace to keep it as raw string.
+# Otherwise you may get: TypeError: unhashable type
+#
+- name: Establish a DynECT API session
   no_log: True
-  local_action: >
-                command curl -s -X POST -H 'Content-Type: application/json'
-                {{ dynect_api_url | mandatory }}/Session/
-                -d '{
-                "customer_name": "{{ dynect_customer | mandatory }}",
-                "user_name": "{{ dynect_api_user | mandatory }}",
-                "password": "{{ dynect_api_password | mandatory }}"
-                }'
+  local_action:
+    module: uri
+    method: POST
+    url: "{{ dynect_api_url | mandatory }}/Session/"
+    HEADER_Content-Type: "application/json"
+    body: ' { "customer_name": "{{ dynect_customer | mandatory }}",
+             "user_name": "{{ dynect_api_user | mandatory }}",
+             "password": "{{ dynect_api_password | mandatory }}"
+            } '
+    return_content: yes
   register: dynect_session_result
+  changed_when: True
   notify: End DynECT API session
 
-- name: Store the DynECT API session as a fact
+- name: Set the DynECT API session as a fact
   when: dynect_session_result|success and
-        'success' == (dynect_session_result.stdout|from_json).status
+        "success" == dynect_session_result.json.status
   no_log: True
   set_fact:
-    dynect_session_token: "{{ (dynect_session_result.stdout|from_json
-                              ).data.token | mandatory }}"
+    dynect_session_token: "{{ dynect_session_result.json.data.token | mandatory }}"
