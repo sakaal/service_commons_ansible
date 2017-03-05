@@ -20,8 +20,8 @@
   become: yes
   lineinfile:
     dest=/etc/yum/yum-cron.conf
-    regexp='^{{ item.key | mandatory }}\s'
-    line='{{ item.key | mandatory }} = {{ item.val | mandatory }}'
+    regexp='^{{ item.key }}\s'
+    line='{{ item.key }} = {{ item.val }}'
   notify:
     - Restart yum-cron
 

@@ -34,8 +34,8 @@
   become: yes
   shell: >
          chdir="/etc/pki/java" "{{ java_home_bin }}keytool"
-         -keystore "{{ item.0.keystore | mandatory }}"
-         -list -alias "{{ item.1.alias | mandatory }}"
+         -keystore "{{ item.0.keystore }}"
+         -list -alias "{{ item.1.alias }}"
          -storepass "{{ item.0.storepass | default('changeit') }}"
   register: java_keystore
   changed_when: java_keystore.rc != 0 and
@@ -50,6 +50,6 @@
          chdir="/etc/pki/java" "{{ java_home_bin }}keytool"
          -keystore "{{ item.item.0.keystore }}"
          -import -alias "{{ item.item.1.alias }}"
-         -file "{{ item.item.1.cert | mandatory }}"
+         -file "{{ item.item.1.cert }}"
          -storepass "{{ item.item.0.storepass | default('changeit') }}"
          -noprompt

@@ -21,7 +21,7 @@
 
 - name: Export trusted GPG public keys from local GnuPG keyring
   with_items: trusted_gpg_public_keys
-  local_action: command gpg --armor --export "{{ item.email | mandatory }}"
+  local_action: command gpg --armor --export "{{ item.email }}"
   register: gnupg_exported_keys
   changed_when: False
   failed_when: gnupg_exported_keys.stderr.strip() != "" or
@@ -32,13 +32,13 @@
 
 - name: Write the GPG public keys to files
   with_items: gnupg_exported_keys.results
-  copy: dest="~/.gnupg/{{ item.item.email }}_{{ item.item.created | mandatory }}_pub.asc"
+  copy: dest="~/.gnupg/{{ item.item.email }}_{{ item.item.created }}_pub.asc"
         content="{{ item.stdout }}"
 
 - name: Import GPG public keys
   with_items: gnupg_exported_keys.results
   command: chdir="~/.gnupg"
-           gpg --import "{{ item.item.email }}_{{ item.item.created | mandatory }}_pub.asc"
+           gpg --import "{{ item.item.email }}_{{ item.item.created }}_pub.asc"
   register: gnupg_imported_keys
   changed_when: ("imported" in gnupg_imported_keys.stderr)
   failed_when: (gnupg_imported_keys.rc != 0) or
@@ -50,7 +50,7 @@
 #
 - name: Trust the GPG public keys imported above
   with_items: gnupg_exported_keys.results
-  shell: echo "{{ item.item.fingerprint | mandatory }}:6:"
+  shell: echo "{{ item.item.fingerprint }}:6:"
          | gpg --import-ownertrust
   register: gnupg_ownertrust
   changed_when: gnupg_ownertrust.stderr.strip() != ""

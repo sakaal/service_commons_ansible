@@ -22,12 +22,12 @@
             dest="/home/{{ admin_username }}/.ssh/config" mode=600
 
 - name: Bastion host self-configuration inventory
-  git: repo="{{ bastion_inventory_repo_service | mandatory }}/{{ bastion_inventory_repo_name | mandatory }}"
+  git: repo="{{ bastion_inventory_repo_service }}/{{ bastion_inventory_repo_name }}"
        dest="/home/{{ admin_username }}/{{ bastion_inventory_repo_name }}"
        recursive=no
 
 - name: Bastion host self-configuration playbooks
-  git: repo="{{ bastion_playbook_repo | mandatory }}"
+  git: repo="{{ bastion_playbook_repo }}"
        dest="/home/{{ admin_username }}/bastion_ansible"
        recursive=no
 

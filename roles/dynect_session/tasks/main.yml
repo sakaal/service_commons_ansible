@@ -13,11 +13,11 @@
   local_action:
     module: uri
     method: POST
-    url: "{{ dynect_api_url | mandatory }}/Session/"
+    url: "{{ dynect_api_url }}/Session/"
     HEADER_Content-Type: "application/json"
-    body: ' { "customer_name": "{{ dynect_customer | mandatory }}",
-             "user_name": "{{ dynect_api_user | mandatory }}",
-             "password": "{{ dynect_api_password | mandatory }}"
+    body: ' { "customer_name": "{{ dynect_customer }}",
+             "user_name": "{{ dynect_api_user }}",
+             "password": "{{ dynect_api_password }}"
             } '
     return_content: yes
   register: dynect_session_result
@@ -29,4 +29,4 @@
         "success" == dynect_session_result.json.status
   no_log: True
   set_fact:
-    dynect_session_token: "{{ dynect_session_result.json.data.token | mandatory }}"
+    dynect_session_token: "{{ dynect_session_result.json.data.token }}"
