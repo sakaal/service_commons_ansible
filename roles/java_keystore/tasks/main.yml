@@ -43,7 +43,7 @@
   failed_when: False
 
 - name: Import certificates to Java keystores
-  with_items: java_keystore.results|default([])
+  with_items: "{{ java_keystore.results | default([]) }}"
   when: item|changed
   become: yes
   shell: >

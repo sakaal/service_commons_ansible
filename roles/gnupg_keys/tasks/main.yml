@@ -7,7 +7,7 @@
 ---
 
 - name: Validate the given administrative GPG public key ids and timestamps
-  with_items: trusted_gpg_public_keys
+  with_items: "{{ trusted_gpg_public_keys }}"
   when: not (
         item.email      |match("^[0-9A-Za-z+.,_-]+@[0-9A-Za-z-]+\.[0-9A-Za-z.-]+$") and
         item.fingerprint|match("^[0-9A-F]{40}$") and
@@ -20,7 +20,7 @@
   failed_when: True
 
 - name: Export trusted GPG public keys from local GnuPG keyring
-  with_items: trusted_gpg_public_keys
+  with_items: "{{ trusted_gpg_public_keys }}"
   local_action: command gpg --armor --export "{{ item.email }}"
   register: gnupg_exported_keys
   changed_when: False
@@ -31,12 +31,12 @@
   file: state=directory path=~/.gnupg mode=700
 
 - name: Write the GPG public keys to files
-  with_items: gnupg_exported_keys.results
+  with_items: "{{ gnupg_exported_keys.results }}"
   copy: dest="~/.gnupg/{{ item.item.email }}_{{ item.item.created }}_pub.asc"
         content="{{ item.stdout }}"
 
 - name: Import GPG public keys
-  with_items: gnupg_exported_keys.results
+  with_items: "{{ gnupg_exported_keys.results }}"
   command: chdir="~/.gnupg"
            gpg --import "{{ item.item.email }}_{{ item.item.created }}_pub.asc"
   register: gnupg_imported_keys
@@ -49,7 +49,7 @@
 # menu of command: gpg --edit-key trust
 #
 - name: Trust the GPG public keys imported above
-  with_items: gnupg_exported_keys.results
+  with_items: "{{ gnupg_exported_keys.results }}"
   shell: echo "{{ item.item.fingerprint }}:6:"
          | gpg --import-ownertrust
   register: gnupg_ownertrust
