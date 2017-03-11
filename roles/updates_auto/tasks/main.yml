@@ -1,30 +1,10 @@
 # file: roles/updates_auto/tasks/main.yml
 ---
 
-- name: Install yum-cron
-  with_items:
-  - yum-cron
-  become: yes
-  yum: name={{ item }}
+- name: Automate yum
+  when: ansible_pkg_mgr == "yum"
+  include: yum.yml
 
-- name: Configure yum-cron
-  with_items:
-  - key: "update_cmd"
-    val: "minimal-security"
-  - key: "download_updates"
-    val: "yes"
-  - key: "apply_updates"
-    val: "yes"
-  - key: "random_sleep"
-    val: "240" # minutes
-  become: yes
-  lineinfile:
-    dest=/etc/yum/yum-cron.conf
-    regexp='^{{ item.key }}\s'
-    line='{{ item.key }} = {{ item.val }}'
-  notify:
-    - Restart yum-cron
-
-- name: Enable yum-cron
-  become: yes
-  service: name=yum-cron enabled=yes state=started
+- name: Automate dnf
+  when: ansible_pkg_mgr == "dnf"
+  include: dnf.yml

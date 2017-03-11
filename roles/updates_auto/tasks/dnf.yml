@@ -1,0 +1,58 @@
+# file: roles/updates_auto/tasks/dnf.yml
+---
+
+- name: Install dnf-automatic
+  with_items:
+  - dnf-automatic
+  become: yes
+  dnf: name="{{ item }}"
+
+- name: Configure dnf-automatic
+  with_items:
+  - sec: commands
+    opt: upgrade_type
+    val: "{{ dnf_automatic_upgrade_type | default('security') }}"
+  - sec: commands
+    opt: download_updates
+    val: yes
+  - sec: commands
+    opt: apply_updates
+    val: yes
+  - sec: commands
+    opt: random_sleep
+    val: "2400" # seconds
+  - sec: emitters
+    opt: emit_via
+    val: stdio
+  - sec: email
+    opt: email_from
+    val: "root@{{ inventory_hostname }}"
+  - sec: email
+    opt: email_to
+    val: "root"
+  - sec: email
+    opt: email_host
+    val: "localhost"
+  become: yes
+  ini_file:
+    dest=/etc/dnf/automatic.conf
+    section='{{ item.sec }}'
+    option='{{ item.opt }}'
+    value='{{ item.val }}'
+    backup=no
+  notify:
+  - Restart dnf-automatic.timer
+
+- name: Enable dnf-automatic.timer
+  become: yes
+  service: name="dnf-automatic.timer" enabled=yes
+
+- name: Start dnf-automatic.timer
+  become: yes
+  service: name="dnf-automatic.timer" state=started
+
+- name: Uninstall yum-cron
+  when: yum_cron_enabled is defined and
+        (not yum_cron_enabled|bool)
+  become: yes
+  dnf: name=yum-cron state=absent
