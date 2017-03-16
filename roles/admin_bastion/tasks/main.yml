@@ -13,9 +13,9 @@
   yum: name="{{ item }}"
 
 - name: Deploy the bastion configuration repository read-only access key
-  copy: src="{{ bastion_deployment_key_dir }}/{{ bastion_deployment_key_filename }}"
+  copy: src="{{ bastion_deployment_key_dir }}/{{ bastion_deployment_key_filename }}.vault"
         dest="/home/{{ admin_username }}/.ssh/{{ bastion_deployment_key_filename }}"
-        mode=600
+        mode=0600
 
 - name: SSH config for bastion configuration repository access
   template: src=bastion_repo_ssh_config.j2

@@ -1,5 +1,5 @@
----
 # file: roles/admin_bastion/meta/main.yml
+---
 
 dependencies:
 - role: "../../service_commons_ansible/roles/gnupg_keys"
