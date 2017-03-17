@@ -1,8 +1,6 @@
-# file: roles/java_keystore/tasks/main.yml
+# file: roles/java_truststore/tasks/main.yml
 #
-# Import certificates to Java truststore files.
-#
-
+# Import certificates to Java TrustStore files.
 #
 # http://docs.oracle.com/javase/8/docs/technotes/guides/security/jsse/JSSERefGuide.html#X509TrustManager
 #
@@ -20,35 +18,35 @@
 
 - name: Use Oracle JDK if present
   when: not java_oracle_bin|skipped and java_oracle_bin.stat.exists
-  set_fact: java_home_bin="{{ java_oracle_home }}/bin/"
+  set_fact:
+    java_home_bin: "{{ java_oracle_home }}/bin/"
 
 - name: Use default Java
   when: java_home_bin is not defined
-  set_fact: java_home_bin=""
+  set_fact:
+    java_home_bin: ""
 
-- name: Check Java keystores
+- name: Check Java TrustStores
   when: java_certificates is defined
   with_nested:
-  - java_keystores|default([])
-  - java_certificates
+  - "{{ java_truststores | default([]) }}"
+  - "{{ java_certificates }}"
   become: yes
-  shell: >
-         chdir="/etc/pki/java" "{{ java_home_bin }}keytool"
-         -keystore "{{ item.0.keystore }}"
+  shell: chdir="/etc/pki/java" "{{ java_home_bin }}keytool"
+         -keystore "{{ item.0.path }}"
          -list -alias "{{ item.1.alias }}"
          -storepass "{{ item.0.storepass | default('changeit') }}"
-  register: java_keystore
-  changed_when: java_keystore.rc != 0 and
-                not 'Keystore file does not exist' in java_keystore.stdout
+  register: java_truststore
+  changed_when: java_truststore.rc != 0 and
+                not 'Keystore file does not exist' in java_truststore.stdout
   failed_when: False
 
-- name: Import certificates to Java keystores
-  with_items: "{{ java_keystore.results | default([]) }}"
+- name: Import certificates to Java TrustStores
+  with_items: "{{ java_truststore.results | default([]) }}"
   when: item|changed
   become: yes
-  shell: >
-         chdir="/etc/pki/java" "{{ java_home_bin }}keytool"
-         -keystore "{{ item.item.0.keystore }}"
+  shell: chdir="/etc/pki/java" "{{ java_home_bin }}keytool"
+         -keystore "{{ item.item.0.path }}"
          -import -alias "{{ item.item.1.alias }}"
          -file "{{ item.item.1.cert }}"
          -storepass "{{ item.item.0.storepass | default('changeit') }}"

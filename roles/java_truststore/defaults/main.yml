@@ -1,0 +1,7 @@
+# file: roles/java_truststore/defaults/main.yml
+---
+
+java_truststores:
+- path: "{{ java_oracle_home }}/jre/lib/security/jssecacerts"
+- path: "{{ java_oracle_home }}/jre/lib/security/cacerts"
+- path: cacerts
