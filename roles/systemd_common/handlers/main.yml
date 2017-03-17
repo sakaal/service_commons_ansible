@@ -1,0 +1,6 @@
+# file: roles/systemd_common/handlers/main.yml
+---
+
+- name: systemctl daemon-reload
+  become: yes
+  command: systemctl daemon-reload

@@ -1,0 +1,9 @@
+# file: roles/systemd_common/tasks/main.yml
+---
+
+- name: Make sure systemd is present
+  become: yes
+  command: pidof systemd
+  register: systemd_pid
+  changed_when: False
+  failed_when: not '1' in systemd_pid.stdout.split()
