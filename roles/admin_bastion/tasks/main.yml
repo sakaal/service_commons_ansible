@@ -1,4 +1,4 @@
-# file: roles/admin_bastion/tasks/main.yml
+# file: roles/admin_bastion/tasks/main.yaml
 #
 # Bastion host self-configuration
 #
@@ -17,9 +17,27 @@
         dest="/home/{{ admin_username }}/.ssh/{{ bastion_deployment_key_filename }}"
         mode=0600
 
+- name: SSH user configuration directory
+  file:
+    state: directory
+    path: "/home/{{ admin_username }}/.ssh/config.d"
+    mode: 0700
+
+- name: Include files in the SSH configuration directory
+  lineinfile:
+    path: "/home/{{ admin_username }}/.ssh/config"
+    backup: yes
+    create: yes
+    insertbefore: BOF
+    regexp: '^Include\s+\config\.d/'
+    line: "Include config.d/*"
+    mode: 0600
+
 - name: SSH config for bastion configuration repository access
-  template: src=bastion_repo_ssh_config.j2
-            dest="/home/{{ admin_username }}/.ssh/config" mode=600
+  template:
+    src: "bastion_repo_ssh_config.j2"
+    dest: "/home/{{ admin_username }}/.ssh/config.d/bastion_repo"
+    mode: 0600
 
 - name: Bastion host self-configuration inventory
   git: repo="{{ bastion_inventory_repo_service }}/{{ bastion_inventory_repo_name }}"
