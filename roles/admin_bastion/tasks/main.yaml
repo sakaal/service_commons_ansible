@@ -13,9 +13,10 @@
   yum: name="{{ item }}"
 
 - name: Deploy the bastion configuration repository read-only access key
-  copy: src="{{ bastion_deployment_key_dir }}/{{ bastion_deployment_key_filename }}.vault"
-        dest="/home/{{ admin_username }}/.ssh/{{ bastion_deployment_key_filename }}"
-        mode=0600
+  copy:
+    src: "{{ bastion_deployment_key_dir }}/{{ bastion_deployment_key_filename }}"
+    dest: "/home/{{ admin_username }}/.ssh/{{ bastion_deployment_key_filename }}"
+    mode: 0600
 
 - name: SSH user configuration directory
   file:
@@ -40,32 +41,46 @@
     mode: 0600
 
 - name: Bastion host self-configuration inventory
-  git: repo="{{ bastion_inventory_repo_service }}/{{ bastion_inventory_repo_name }}"
-       dest="/home/{{ admin_username }}/{{ bastion_inventory_repo_name }}"
-       recursive=no
+  git:
+    repo: "{{ bastion_inventory_repo_service }}/{{ bastion_inventory_repo_name }}"
+    dest: "/home/{{ admin_username }}/{{ bastion_inventory_repo_name }}"
+    recursive: no
 
 - name: Bastion host self-configuration playbooks
-  git: repo="{{ bastion_playbook_repo }}"
-       dest="/home/{{ admin_username }}/bastion_ansible"
-       recursive=no
+  git:
+    repo: "{{ bastion_playbook_repo }}"
+    dest: "/home/{{ admin_username }}/bastion_ansible"
+    recursive: no
 
 - name: Make sure ~/bin/ exists
-  file: state=directory dest="/home/{{ admin_username }}/bin"
+  file:
+    state: directory
+    dest: "/home/{{ admin_username }}/bin"
 
 - name: Bastion host self-configuration script
-  template: src=bastion.sh.j2 dest="/home/{{ admin_username }}/bin/bastion.sh"
-            mode=770
+  template:
+    src: "bastion.sh.j2"
+    dest: "/home/{{ admin_username }}/bin/bastion.sh"
+    mode: 0770
 
 - name: Bastion host self-configuration service unit file
   become: yes
-  template: src=bastion.service.j2 dest=/etc/systemd/system/bastion.service
-            mode=755 owner=root group=root
+  template:
+    src: "bastion.service.j2"
+    dest: "/etc/systemd/system/bastion.service"
+    mode: 0644
+    owner: root
+    group: root
   notify: systemctl daemon-reload
 
 - name: Bastion host self-configuration timer unit file
   become: yes
-  template: src=bastion.timer.j2 dest=/etc/systemd/system/bastion.timer
-            mode=755 owner=root group=root
+  template:
+    src: "bastion.timer.j2"
+    dest: "/etc/systemd/system/bastion.timer"
+    mode: 0644
+    owner: root
+    group: root
   notify: systemctl daemon-reload
 
 - name: Enable the bastion host self-configuration timer
