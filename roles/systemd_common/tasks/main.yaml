@@ -1,4 +1,4 @@
-# file: roles/systemd_common/tasks/main.yml
+# file: roles/systemd_common/tasks/main.yaml
 ---
 
 - name: Make sure systemd is present

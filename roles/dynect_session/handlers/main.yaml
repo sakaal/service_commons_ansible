@@ -1,4 +1,4 @@
-# file: roles/dynect_session/handlers/main.yml
+# file: roles/dynect_session/handlers/main.yaml
 ---
 
 - name: End DynECT API session

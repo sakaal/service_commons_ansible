@@ -1,4 +1,4 @@
-# file: roles/dynect_session/tasks/main.yml
+# file: roles/dynect_session/tasks/main.yaml
 #
 # Starts a DynECT DNS management API session.
 #
@@ -25,7 +25,7 @@
   notify: End DynECT API session
 
 - name: Set the DynECT API session as a fact
-  when: dynect_session_result|success and
+  when: dynect_session_result is success and
         "success" == dynect_session_result.json.status
   no_log: True
   set_fact:

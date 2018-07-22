@@ -1,4 +1,4 @@
-# file: roles/entropy/tasks/main.yml
+# file: roles/entropy/tasks/main.yaml
 ---
 
 - name: HArdware Volatile Entropy Gathering and Expansion

@@ -1,10 +1,10 @@
-# file: roles/updates_auto/tasks/main.yml
+# file: roles/updates_auto/tasks/main.yaml
 ---
 
 - name: Automate yum
   when: ansible_pkg_mgr == "yum"
-  include: yum.yml
+  include: yum.yaml
 
 - name: Automate dnf
   when: ansible_pkg_mgr == "dnf"
-  include: dnf.yml
+  include: dnf.yaml

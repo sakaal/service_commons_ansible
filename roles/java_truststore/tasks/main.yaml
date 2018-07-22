@@ -1,4 +1,4 @@
-# file: roles/java_truststore/tasks/main.yml
+# file: roles/java_truststore/tasks/main.yaml
 #
 # Import certificates to Java TrustStore files.
 #
@@ -17,7 +17,7 @@
   register: java_oracle_bin
 
 - name: Use Oracle JDK if present
-  when: not java_oracle_bin|skipped and java_oracle_bin.stat.exists
+  when: not java_oracle_bin is skipped and java_oracle_bin.stat.exists
   set_fact:
     java_home_bin: "{{ java_oracle_home }}/bin/"
 
@@ -43,7 +43,7 @@
 
 - name: Import certificates to Java TrustStores
   with_items: "{{ java_truststore.results | default([]) }}"
-  when: item|changed
+  when: item is changed
   become: yes
   shell: chdir="/etc/pki/java" "{{ java_home_bin }}keytool"
          -keystore "{{ item.item.0.path }}"

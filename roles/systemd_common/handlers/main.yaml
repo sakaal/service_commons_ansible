@@ -1,4 +1,4 @@
-# file: roles/systemd_common/handlers/main.yml
+# file: roles/systemd_common/handlers/main.yaml
 ---
 
 - name: systemctl daemon-reload

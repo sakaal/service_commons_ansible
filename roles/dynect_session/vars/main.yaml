@@ -1,11 +1,11 @@
-# file:	roles/dynect_session/vars/main.yml
+# file:	roles/dynect_session/vars/main.yaml
 ---
 
 dynect_api_url: "https://api2.dynect.net/REST"
 
 #
 # Set the following variables in
-# com.example_main_ansible/group_vars/all/dynect.yml
+# com.example_main_ansible/group_vars/all/dynect.yaml
 #
 #dynect_customer:
 #dynect_api_user:

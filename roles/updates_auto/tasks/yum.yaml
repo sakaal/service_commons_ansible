@@ -1,4 +1,4 @@
-# file: roles/updates_auto/tasks/main.yml
+# file: roles/updates_auto/tasks/main.yaml
 ---
 
 - assert:

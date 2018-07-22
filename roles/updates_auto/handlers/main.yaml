@@ -1,4 +1,4 @@
-# file: roles/updates_auto/handlers/main.yml
+# file: roles/updates_auto/handlers/main.yaml
 ---
 
 - name: Restart yum-cron

@@ -1,4 +1,4 @@
-# file: roles/ssh_known_hosts/tasks/main.yml
+# file: roles/ssh_known_hosts/tasks/main.yaml
 #
 # SSH known hosts management
 #

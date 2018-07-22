@@ -1,4 +1,4 @@
-# file: roles/java_truststore/defaults/main.yml
+# file: roles/java_truststore/defaults/main.yaml
 ---
 
 java_truststores:

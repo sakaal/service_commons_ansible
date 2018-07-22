@@ -1,4 +1,4 @@
-# file: roles/updates_auto/tasks/dnf.yml
+# file: roles/updates_auto/tasks/dnf.yaml
 ---
 
 - name: Install dnf-automatic

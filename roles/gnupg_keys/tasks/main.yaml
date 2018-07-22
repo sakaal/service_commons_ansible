@@ -1,4 +1,4 @@
-# file: roles/gpg_keys/tasks/main.yml
+# file: roles/gpg_keys/tasks/main.yaml
 #
 # Deploys administrative GPG public keys
 #
