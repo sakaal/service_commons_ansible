@@ -9,9 +9,9 @@
 - name: Validate the given administrative GPG public key ids and timestamps
   with_items: "{{ trusted_gpg_public_keys }}"
   when: not (
-        item.email      |match("^[0-9A-Za-z+.,_-]+@[0-9A-Za-z-]+\.[0-9A-Za-z.-]+$") and
-        item.fingerprint|match("^[0-9A-F]{40}$") and
-        item.created    |match("^[0-9]{4}-[0-9]{2}-[0-9]{2}$")
+        item.email       is match("^[0-9A-Za-z+.,_-]+@[0-9A-Za-z-]+\.[0-9A-Za-z.-]+$") and
+        item.fingerprint is match("^[0-9A-F]{40}$") and
+        item.created     is match("^[0-9]{4}-[0-9]{2}-[0-9]{2}$")
         )
   local_action: command echo Invalid GPG key entry
                 email=\"{{ item.email }}\"
