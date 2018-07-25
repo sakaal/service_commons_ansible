@@ -2,8 +2,11 @@
 ---
 
 - name: End DynECT API session
-  local_action: uri method=DELETE
-                url="{{ dynect_api_url }}/Session/"
-                HEADER_Content-Type="application/json"
-                HEADER_Auth-Token="{{ dynect_session_token }}"
+  local_action:
+    module: uri
+    method: DELETE 
+    url: "{{ dynect_api_url }}/Session/"
+    headers:
+      Content-Type: "application/json"
+      Auth-Token: "{{ dynect_session_token }}"
   changed_when: False

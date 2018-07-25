@@ -4,21 +4,19 @@
 #
 ---
 
-#
-# The JSON body must be wrapped in whitespace to keep it as raw string.
-# Otherwise you may get: TypeError: unhashable type
-#
 - name: Establish a DynECT API session
   no_log: True
   local_action:
     module: uri
     method: POST
     url: "{{ dynect_api_url }}/Session/"
-    HEADER_Content-Type: "application/json"
-    body: ' { "customer_name": "{{ dynect_customer }}",
-             "user_name": "{{ dynect_api_user }}",
-             "password": "{{ dynect_api_password }}"
-            } '
+    headers:
+      Content-Type: "application/json"
+    body_format: json
+    body:
+      customer_name: "{{ dynect_customer }}"
+      user_name: "{{ dynect_api_user }}"
+      password: "{{ dynect_api_password }}"
     return_content: yes
   register: dynect_session_result
   changed_when: True

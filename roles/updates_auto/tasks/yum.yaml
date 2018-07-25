@@ -38,6 +38,8 @@
   become: yes
   command: yum -y clean all
   changed_when: no
+  args:
+    warn: no
 
 - name: Update all packages
   become: yes
