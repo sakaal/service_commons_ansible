@@ -10,7 +10,9 @@
   - git
   - gnupg
   become: yes
-  yum: name="{{ item }}"
+  yum:
+    name: "{{ item }}"
+    state: present
 
 - name: Deploy the bastion configuration repository read-only access key
   copy:
@@ -71,7 +73,6 @@
     mode: 0644
     owner: root
     group: root
-  notify: systemctl daemon-reload
 
 - name: Bastion host self-configuration timer unit file
   become: yes
@@ -81,16 +82,18 @@
     mode: 0644
     owner: root
     group: root
-  notify: systemctl daemon-reload
 
-- name: Enable the bastion host self-configuration timer
+- name: Enable and start the bastion host self-configuration timer
   become: yes
-  command: systemctl enable bastion.timer
-
-- name: Start the bastion host self-configuration timer
-  become: yes
-  command: systemctl start bastion.timer
+  systemd:
+    daemon_reload: yes
+    name: bastion.timer
+    enabled: yes
+    state: started
 
 - name: Apply the bastion configuration
   become: yes
-  command: systemctl start bastion
+  systemd:
+    daemon_reload: yes
+    name: bastion.service
+    state: started

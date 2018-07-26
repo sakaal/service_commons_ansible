@@ -2,7 +2,7 @@
 Description=Update the bastion host configuration
 
 [Service]
-Type=simple
+Type=oneshot
 ExecStart=/usr/bin/su - {{ admin_username }} -c bastion.sh
 
 [Install]

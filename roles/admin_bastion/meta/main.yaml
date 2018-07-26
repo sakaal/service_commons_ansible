@@ -2,6 +2,5 @@
 ---
 
 dependencies:
-- role: "../service_commons_ansible/roles/systemd_common"
-- role: "../service_commons_ansible/roles/gnupg_keys"
-- role: "../service_commons_ansible/roles/ssh_known_hosts"
+- role: "{{ playbook_dir | dirname }}/service_commons_ansible/roles/gnupg_keys"
+- role: "{{ playbook_dir | dirname }}/service_commons_ansible/roles/ssh_known_hosts"

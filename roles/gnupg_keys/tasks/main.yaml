@@ -28,12 +28,16 @@
                gnupg_exported_keys.stdout.strip() == ""
 
 - name: Ensure ~/.gnupg/ exists
-  file: state=directory path=~/.gnupg mode=700
+  file:
+    state: directory
+    path: ~/.gnupg
+    mode: 0700
 
 - name: Write the GPG public keys to files
   with_items: "{{ gnupg_exported_keys.results }}"
-  copy: dest="~/.gnupg/{{ item.item.email }}_{{ item.item.created }}_pub.asc"
-        content="{{ item.stdout }}"
+  copy:
+    dest: "~/.gnupg/{{ item.item.email }}_{{ item.item.created }}_pub.asc"
+    content: "{{ item.stdout }}"
 
 - name: Import GPG public keys
   with_items: "{{ gnupg_exported_keys.results }}"
