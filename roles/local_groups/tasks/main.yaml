@@ -1,4 +1,4 @@
-# file: roles/local_groups/tasks/main.yml
+# file: roles/local_groups/tasks/main.yaml
 #
 # Manage local groups
 #

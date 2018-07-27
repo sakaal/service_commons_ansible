@@ -1,4 +1,4 @@
-# file: roles/local_users/tasks/main.yml
+# file: roles/local_users/tasks/main.yaml
 #
 # If you automatically set the user password on installation, make sure
 # to ansible-vault encrypt the file that defines local_users.
