@@ -1,0 +1,46 @@
+# file: roles/local_users/tasks/main.yml
+#
+# If you automatically set the user password on installation, make sure
+# to ansible-vault encrypt the file that defines local_users.
+#
+---
+
+- name: Check local users configuration
+  with_items: "{{ local_users | default([]) }}"
+  assert:
+    that:
+    - item.user is defined
+    - item.user.strip() != ""
+    - item.fullname is defined
+    - item.fullname.strip() != ""
+
+- name: Manage local user accounts
+  with_items: "{{ local_users | default([]) }}"
+  user:
+    name: "{{ item.user }}"
+    comment: "{{ item.fullname }}"
+    home: "{{ item.home | default(omit) }}"
+    password: "{{ item.password | default(omit) }}"
+    update_password: "{{ 'always' if item.password is defined else 'on_create' }}"
+    append: yes
+    groups: "{{ item.groups | default(omit) }}"
+    shell: "{{ item.shell | default(omit) }}"
+    generate_ssh_key: "{{ item.generate_ssh_key | default(omit) }}"
+    ssh_key_bits: "{{ ssh_key_bits | default(4096) }}"
+    ssh_key_type: "{{ ssh_key_type | default('rsa') }}"
+    ssh_key_comment: "{{ item.user }}@{{ inventory_hostname }}_{{ ansible_date_time.iso8601 | replace(':', '') }}"
+    state: "{{ item.state | default('present') }}"
+    system: "{{ item.system | default(omit) }}"
+    uid: "{{ item.uid | default(omit) }}"
+
+- name: Manage the authorized SSH keys of local user accounts
+  with_subelements:
+  - "{{ local_users | default([]) }}"
+  - authorized_keys
+  - flags:
+    skip_missing: True
+  when: item.0.state == "present"
+  authorized_key:
+    user: "{{ item.0.user }}"
+    key: "{{ item.1.key }} {{ item.1.id }}"
+    state: "{{ item.1.state | default('present') }}"

@@ -1,0 +1,22 @@
+# file: roles/local_groups/tasks/main.yml
+#
+# Manage local groups
+#
+---
+
+- name: Check local groups configuration
+  with_items: "{{ local_groups | default([]) }}"
+  assert:
+    that:
+    - item.name is defined
+    - item.name.strip() != ""
+    - item.system is defined
+
+- name: Manage local groups
+  with_items: "{{ local_groups | default([]) }}"
+  become: yes
+  group:
+    name: "{{ item.name }}"
+    gid: "{{ item.gid | default(omit) }}"
+    system: "{{ item.system }}"
+    state: "{{ item.state | default('present') }}"
