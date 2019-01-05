@@ -2,10 +2,9 @@
 ---
 
 - name: Install dnf-automatic
-  with_items:
-  - dnf-automatic
   become: yes
-  dnf: name="{{ item }}"
+  dnf:
+    name="dnf-automatic"
 
 - name: Configure dnf-automatic
   with_items:
@@ -45,14 +44,20 @@
 
 - name: Enable dnf-automatic.timer
   become: yes
-  service: name="dnf-automatic.timer" enabled=yes
+  service:
+    name: "dnf-automatic.timer"
+    enabled: yes
 
 - name: Start dnf-automatic.timer
   become: yes
-  service: name="dnf-automatic.timer" state=started
+  service:
+    name: "dnf-automatic.timer"
+    state: started
 
 - name: Uninstall yum-cron
   when: yum_cron_enabled is defined and
         (not yum_cron_enabled|bool)
   become: yes
-  dnf: name=yum-cron state=absent
+  dnf:
+    name: yum-cron
+    state: absent

@@ -3,8 +3,12 @@
 
 - name: Restart yum-cron
   become: yes
-  service: name=yum-cron state="{{ yum_cron_state | default('restarted') }}"
+  service:
+    name: yum-cron
+    state: "{{ yum_cron_state | default('restarted') }}"
 
 - name: Restart dnf-automatic.timer
   become: yes
-  service: name="dnf-automatic.timer" state=restarted
+  service:
+    name: "dnf-automatic.timer"
+    state: restarted

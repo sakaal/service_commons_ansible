@@ -18,10 +18,10 @@
 #
 
 - name: Install yum-utils
-  with_items:
-  - yum-utils
   become: yes
-  yum: name="{{ item }}" state=present
+  yum:
+    name: "yum-utils"
+    state: present
 
 - name: Remove duplicate packages
   become: yes
@@ -30,9 +30,10 @@
 
 - name: Configure yum to require exact architecture
   become: yes
-  lineinfile: dest="/etc/yum.conf"
-              regexp="^#?exactarch=.*$"
-              line="exactarch=1"
+  lineinfile:
+    dest: "/etc/yum.conf"
+    regexp: "^#?exactarch=.*$"
+    line: "exactarch=1"
 
 - name: yum clean all
   become: yes
@@ -43,7 +44,9 @@
 
 - name: Update all packages
   become: yes
-  yum: name=* state=latest
+  yum:
+    name: "*"
+    state: latest
 
 #
 # End https://access.redhat.com/solutions/158883
@@ -51,10 +54,10 @@
 
 - name: Install yum-cron
   when: yum_cron_enabled | default(True) | bool
-  with_items:
-  - yum-cron
   become: yes
-  yum: name="{{ item }}" state=latest
+  yum:
+    name: "yum-cron"
+    state: latest
 
 - name: Configure yum-cron
   when: yum_cron_enabled | default(True) | bool
