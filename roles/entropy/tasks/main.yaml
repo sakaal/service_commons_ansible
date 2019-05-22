@@ -2,11 +2,13 @@
 ---
 
 - name: HArdware Volatile Entropy Gathering and Expansion
-  with_items:
-  - haveged 
   become: yes
-  yum: name="{{ item }}"
+  yum:
+    name: "haveged"
 
 - name: Enable the entropy service
   become: yes
-  service: name=haveged enabled=yes state=started
+  service:
+    name: haveged
+    enabled: yes
+    state: started
